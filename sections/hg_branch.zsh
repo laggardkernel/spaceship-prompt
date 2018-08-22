@@ -16,7 +16,7 @@ SPACESHIP_HG_BRANCH_COLOR="${SPACESHIP_HG_BRANCH_COLOR="magenta"}"
 # Section
 # ------------------------------------------------------------------------------
 
-spaceship_hg_branch() {
+spaceship_async_job_hg_branch() {
   [[ $SPACESHIP_HG_BRANCH_SHOW == false ]] && return
 
   spaceship::is_hg || return

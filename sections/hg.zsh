@@ -25,10 +25,18 @@ source "$SPACESHIP_ROOT/sections/hg_status.zsh"
 # Show both hg branch and hg status:
 #   spaceship_hg_branch
 #   spaceship_hg_status
-spaceship_hg() {
+
+spaceship_async_job_load_hg() {
   [[ $SPACESHIP_HG_SHOW == false ]] && return
 
-  local hg_branch="$(spaceship_hg_branch)" hg_status="$(spaceship_hg_status)"
+  async_job spaceship spaceship_async_job_hg_branch
+  async_job spaceship spaceship_async_job_hg_status
+}
+
+spaceship_hg() {
+
+  local hg_branch="${SPACESHIP_ASYNC_RESULTS[spaceship_async_job_hg_branch]}"
+  local hg_status="${SPACESHIP_ASYNC_RESULTS[spaceship_async_job_hg_status]}"
 
   [[ -z $hg_branch ]] && return
 
