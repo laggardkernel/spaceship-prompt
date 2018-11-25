@@ -41,6 +41,7 @@ SPACESHIP_PROMPT_ORDER=(
   dotnet        # .NET section
   ember         # Ember.js section
   kubecontext   # Kubectl context section
+  terraform     # Terraform workspace section
   exec_time     # Execution time
   line_sep      # Line break
   battery       # Battery level and status
@@ -379,7 +380,11 @@ Julia section is shown only in directories that contain file with `.jl` extensio
 
 ### Docker (`docker`)
 
-Docker section is shown only in directories that contain `Dockerfile` or `docker-compose.yml` file.
+Docker section is shown only in directories that contain `Dockerfile` or it's possible to run `docker-compose`.
+
+`docker-compose` will run only if there is docker-compose.yml, or other file(s) specified with `COMPOSE_FILE` are accessible.
+
+The environment variable `COMPOSE_PATH_SEPARATOR` is supported too. For more information see [Compose CLI environment variables](https://docs.docker.com/compose/reference/envvars/).
 
 | Variable | Default | Meaning |
 | :------- | :-----: | ------- |
@@ -463,7 +468,9 @@ Ember.js section is shown only in directories that contain a `ember-cli-build.js
 
 ### Kubectl context (`kubecontext`)
 
-Shows the active kubectl context.
+Shows the active kubectl context, which consists of a cluster name and, when working in a non-default namespace, also a namespace name.
+
+**💡 Tip:**  If your cluster name (and thus context name) is too long, you can give it a shorter name using `kubectl config rename-context very_long_context_name name`.
 
 | Variable | Default | Meaning |
 | :------- | :-----: | ------- |
@@ -472,6 +479,18 @@ Shows the active kubectl context.
 | `SPACESHIP_KUBECONTEXT_SUFFIX` | `$SPACESHIP_PROMPT_DEFAULT_SUFFIX` | Suffix after Kubectl context section |
 | `SPACESHIP_KUBECONTEXT_SYMBOL` | `☸️·` | Character to be shown before Kubectl context |
 | `SPACESHIP_KUBECONTEXT_COLOR` | `cyan` | Color of Kubectl context section |
+
+### Terraform workspace (`terraform`)
+
+Shows the active Terraform wokspace in directories that contain `.terraform/environment` file.
+
+| Variable | Default | Meaning |
+| :------- | :-----: | ------- |
+| `SPACESHIP_TERRAFORM_SHOW` | `true` | Current Terraform workspace section |
+| `SPACESHIP_TERRAFORM_PREFIX` | `$SPACESHIP_PROMPT_DEFAULT_PREFIX` | Prefix before Terraform workspace section |
+| `SPACESHIP_TERRAFORM_SUFFIX` | `$SPACESHIP_PROMPT_DEFAULT_SUFFIX` | Suffix after Terraform workspace section |
+| `SPACESHIP_TERRAFORM_SYMBOL` | `🛠️·` | Character to be shown before Terraform workspace |
+| `SPACESHIP_TERRAFORM_COLOR` | `105` | Color of Terraform workspace section |
 
 ### Execution time (`exec_time`)
 
