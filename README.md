@@ -163,7 +163,7 @@ Set `ZSH_THEME="spaceship"` in your `.zshrc`.
 Add the following snippet in your `~/.zshrc`:
 
 ```
-antigen theme https://github.com/denysdovhan/spaceship-prompt spaceship
+antigen theme denysdovhan/spaceship-prompt
 ```
 
 ### [antibody]
@@ -254,6 +254,12 @@ Also, take a look at popular option presets or share your own configuration on [
 Having trouble? Take a look at out [Troubleshooting](./docs/Troubleshooting.md) page.
 
 Still struggling? Please, [file an issue](https://github.com/denysdovhan/spaceship-prompt/issues/new/choose), describe your problem and we will gladly help you.
+
+## Related Projects
+
+Here's a list of related projects that have been inspired by Spaceship ZSH.
+
+- [**matchai/spacefish**](https://github.com/matchai/spacefish) - A port of Spaceship ZSH for fish shell intending to achieve complete feature parity.
 
 ## Team
 
