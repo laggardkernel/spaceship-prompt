@@ -34,7 +34,7 @@ spaceship::is_hg() {
 
   while [ "$up_level" -ne 3 ] && [ "$root" ] && [ ! -d "$root/.hg" ]; do
     root="${root%/*}"
-    ((up_level++))
+    (( up_level++ ))
   done
 
   [[ -n "$root" ]] && [ "$up_level" -ne 3 ] &>/dev/null
@@ -79,4 +79,16 @@ spaceship::displaytime() {
 spaceship::union() {
   typeset -U sections=("$@")
   echo $sections
+}
+
+spaceship::exists_file() {
+  local root="$(pwd -P)"
+  local up_level=0
+
+  while [ "$up_level" -ne 3 ] && [ "$root" ] && [ ! -f "$root/$1" ]; do
+    root="${root%/*}"
+    (( up_level++ ))
+  done
+
+  [[ -n "$root" ]] && [ "$up_level" -ne 3 ] &>/dev/null
 }
