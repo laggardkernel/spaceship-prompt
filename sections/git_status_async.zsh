@@ -25,14 +25,7 @@ SPACESHIP_GIT_STATUS_DIVERGED="${SPACESHIP_GIT_STATUS_DIVERGED="⇕"}"
 # Section
 # ------------------------------------------------------------------------------
 
-# We used to depend on OMZ git library,
-# But it doesn't handle many of the status indicator combinations.
-# Also, It's hard to maintain external dependency.
-# See PR #147 at https://git.io/vQkkB
-# See git help status to know more about status formats
-spaceship_git_status() {
-  [[ $SPACESHIP_GIT_STATUS_SHOW == false ]] && return
-
+spaceship_async_job_git_status_async() {
   spaceship::is_git || return
 
   local INDEX git_status=""
@@ -106,10 +99,9 @@ spaceship_git_status() {
     [[ "$is_behind" == true ]] && git_status="$SPACESHIP_GIT_STATUS_BEHIND$git_status"
   fi
 
-  if [[ -n $git_status ]]; then
-    # Status prefixes are colorized
-    spaceship::section \
-      "$SPACESHIP_GIT_STATUS_COLOR" \
-      "$SPACESHIP_GIT_STATUS_PREFIX$git_status$SPACESHIP_GIT_STATUS_SUFFIX"
-  fi
+	if [[ -n $git_status ]]; then
+		spaceship::section \
+			"$SPACESHIP_GIT_STATUS_COLOR" \
+			"$SPACESHIP_GIT_STATUS_PREFIX$git_status$SPACESHIP_GIT_STATUS_SUFFIX"
+	fi
 }

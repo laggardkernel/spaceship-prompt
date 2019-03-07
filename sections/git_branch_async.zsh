@@ -16,8 +16,12 @@ SPACESHIP_GIT_BRANCH_COLOR="${SPACESHIP_GIT_BRANCH_COLOR="magenta"}"
 # Section
 # ------------------------------------------------------------------------------
 
-spaceship_git_branch() {
-  [[ $SPACESHIP_GIT_BRANCH_SHOW == false ]] && return
+spaceship_async_job_git_branch_async() {
+  zstyle ':vcs_info:*' enable git
+  zstyle ':vcs_info:git*' formats '%b'
+  zstyle ':vcs_info:git*' actionformats '%b|%a'
+
+  vcs_info
 
   local git_current_branch="$vcs_info_msg_0_"
   [[ -z "$git_current_branch" ]] && return
