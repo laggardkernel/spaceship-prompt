@@ -15,20 +15,28 @@ SPACESHIP_HG_SYMBOL="${SPACESHIP_HG_SYMBOL="☿ "}"
 # Dependencies
 # ------------------------------------------------------------------------------
 
-source "$SPACESHIP_ROOT/sections/hg_branch.zsh"
-source "$SPACESHIP_ROOT/sections/hg_status.zsh"
+source "$SPACESHIP_ROOT/sections/hg_branch_async.zsh"
+source "$SPACESHIP_ROOT/sections/hg_status_async.zsh"
 
 # ------------------------------------------------------------------------------
 # Section
 # ------------------------------------------------------------------------------
 
 # Show both hg branch and hg status:
-#   spaceship_hg_branch
-#   spaceship_hg_status
-spaceship_hg() {
+#   spaceship_hg_branch_async
+#   spaceship_hg_status_async
+
+spaceship_async_job_load_hg_async() {
   [[ $SPACESHIP_HG_SHOW == false ]] && return
 
-  local hg_branch="$(spaceship_hg_branch)" hg_status="$(spaceship_hg_status)"
+  async_job spaceship spaceship_async_job_hg_branch_async
+  async_job spaceship spaceship_async_job_hg_status_async
+}
+
+spaceship_hg_async() {
+
+  local hg_branch="${SPACESHIP_ASYNC_RESULTS[spaceship_async_job_hg_branch_async]}"
+  local hg_status="${SPACESHIP_ASYNC_RESULTS[spaceship_async_job_hg_status_async]}"
 
   [[ -z $hg_branch ]] && return
 

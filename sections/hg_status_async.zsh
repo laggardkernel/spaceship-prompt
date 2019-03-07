@@ -21,7 +21,7 @@ SPACESHIP_HG_STATUS_DELETED="${SPACESHIP_HG_STATUS_DELETED="✘"}"
 # ------------------------------------------------------------------------------
 
 # Check if current dir is a hg repo and show hg status as indicators
-spaceship_hg_status() {
+spaceship_async_job_hg_status_async() {
   [[ $SPACESHIP_HG_STATUS_SHOW == false ]] && return
 
   spaceship::is_hg || return
