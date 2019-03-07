@@ -28,4 +28,3 @@ spaceship_exec_time() {
       "$SPACESHIP_EXEC_TIME_SUFFIX"
   fi
 }
-
