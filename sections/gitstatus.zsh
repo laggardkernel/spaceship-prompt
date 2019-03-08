@@ -79,19 +79,19 @@ spaceship_gitstatus_status() {
     INDEX=$(command git status --porcelain -b 2> /dev/null)
 
     # Check for modified files
-    if $(echo "$INDEX" | command grep '^[ MARC]M ' &> /dev/null); then
+    if $(<<< "$INDEX" command grep '^[ MARC]M ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_MODIFIED$git_status"
     fi
 
     # Check for renamed files
-    if $(echo "$INDEX" | command grep '^R[ MD] ' &> /dev/null); then
+    if $(<<< "$INDEX" command grep '^R[ MD] ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_RENAMED$git_status"
     fi
 
     # Check for deleted files
-    if $(echo "$INDEX" | command grep '^[MARCDU ]D ' &> /dev/null); then
+    if $(<<< "$INDEX" command grep '^[MARCDU ]D ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_DELETED$git_status"
-    elif $(echo "$INDEX" | command grep '^D[ UM] ' &> /dev/null); then
+    elif $(<<< "$INDEX" command grep '^D[ UM] ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_DELETED$git_status"
     fi
   fi
@@ -106,13 +106,13 @@ spaceship_gitstatus_status() {
   # Unsupported {{{
   if [[ $SPACESHIP_GITSTATUS_HYBRID == true ]]; then
     # Check for unmerged files
-    if $(echo "$INDEX" | command grep '^U[UDA] ' &> /dev/null); then
+    if $(<<< "$INDEX" command grep '^U[UDA] ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_UNMERGED$git_status"
-    elif $(echo "$INDEX" | command grep '^AA ' &> /dev/null); then
+    elif $(<<< "$INDEX" command grep '^AA ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_UNMERGED$git_status"
-    elif $(echo "$INDEX" | command grep '^DD ' &> /dev/null); then
+    elif $(<<< "$INDEX" command grep '^DD ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_UNMERGED$git_status"
-    elif $(echo "$INDEX" | command grep '^[DA]U ' &> /dev/null); then
+    elif $(<<< "$INDEX" command grep '^[DA]U ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_UNMERGED$git_status"
     fi
   fi
