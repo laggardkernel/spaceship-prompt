@@ -4,7 +4,7 @@
 #
 # Configuration {{{
 # Gitstatus
-SPACESHIP_GITSTATUS_HYBRID="${SPACESHIP_GITSTATUS_HYBRID=true}"
+SPACESHIP_GITSTATUS_HYBRID="${SPACESHIP_GITSTATUS_HYBRID=false}"
 SPACESHIP_GITSTATUS_SKIP_DAEMON="${SPACESHIP_GITSTATUS_SKIP_DAEMON=false}"
 
 # Git
@@ -64,8 +64,18 @@ spaceship_gitstatus_status() {
 
   local INDEX git_status=""
 
+  # Check for untracked files
+  if (( $VCS_STATUS_HAS_UNTRACKED )); then
+    git_status="$SPACESHIP_GIT_STATUS_UNTRACKED$git_status"
+  fi
+
+  # Check for staged files
+  if (( $VCS_STATUS_HAS_STAGED )); then
+    git_status="$SPACESHIP_GIT_STATUS_ADDED$git_status"
+  fi
+
   # Unsupported {{{
-  if [[ $SPACESHIP_GITSTATUS_HYBRID != [Ff]alse ]]; then
+  if [[ $SPACESHIP_GITSTATUS_HYBRID == true ]]; then
     INDEX=$(command git status --porcelain -b 2> /dev/null)
 
     # Check for modified files
@@ -84,7 +94,17 @@ spaceship_gitstatus_status() {
     elif $(echo "$INDEX" | command grep '^D[ UM] ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_DELETED$git_status"
     fi
+  fi
 
+  # }}}
+
+  # Check for stashes
+  if (( $VCS_STATUS_STASHES )); then
+    git_status="$SPACESHIP_GIT_STATUS_STASHED$git_status"
+  fi
+
+  # Unsupported {{{
+  if [[ $SPACESHIP_GITSTATUS_HYBRID == true ]]; then
     # Check for unmerged files
     if $(echo "$INDEX" | command grep '^U[UDA] ' &> /dev/null); then
       git_status="$SPACESHIP_GIT_STATUS_UNMERGED$git_status"
@@ -98,21 +118,6 @@ spaceship_gitstatus_status() {
   fi
 
   # }}}
-
-  # Check for untracked files
-  if (( $VCS_STATUS_HAS_UNTRACKED )); then
-    git_status="$SPACESHIP_GIT_STATUS_UNTRACKED$git_status"
-  fi
-
-  # Check for staged files
-  if (( $VCS_STATUS_HAS_STAGED )); then
-    git_status="$SPACESHIP_GIT_STATUS_ADDED$git_status"
-  fi
-
-  # Check for stashes
-  if (( $VCS_STATUS_STASHES )); then
-    git_status="$SPACESHIP_GIT_STATUS_STASHED$git_status"
-  fi
 
   # Check wheather branch has diverged
   if (( $VCS_STATUS_COMMITS_AHEAD )) && (( $VCS_STATUS_COMMITS_BEHIND )); then
