@@ -5,6 +5,7 @@
 # Configuration {{{
 # Gitstatus
 SPACESHIP_GITSTATUS_HYBRID="${SPACESHIP_GITSTATUS_HYBRID=true}"
+SPACESHIP_GITSTATUS_SKIP_DAEMON="${SPACESHIP_GITSTATUS_SKIP_DAEMON=false}"
 
 # Git
 SPACESHIP_GIT_SHOW="${SPACESHIP_GIT_SHOW=true}"
@@ -36,9 +37,15 @@ SPACESHIP_GIT_STATUS_DIVERGED="${SPACESHIP_GIT_STATUS_DIVERGED="⇕"}"
 
 # }}}
 # Gitstatus Daemon {{{
-! (( $+functions[gitstatus_query] )) && source "$SPACESHIP_ROOT/modules/gitstatus/gitstatus.plugin.zsh" || return
+if [[ $SPACESHIP_GITSTATUS_SKIP_MODULE != true ]]; then
+  if ! (( $+functions[gitstatus_query] )); then
+    source "$SPACESHIP_ROOT/modules/gitstatus/gitstatus.plugin.zsh" || return
+  fi
 
-gitstatus_stop SPACESHIP && gitstatus_start SPACESHIP
+  if [[ $SPACESHIP_GITSTATUS_SKIP_DAEMON != true ]]; then
+    gitstatus_stop SPACESHIP && gitstatus_start SPACESHIP
+  fi
+fi
 
 # }}}
 # Dependencies {{{
@@ -129,6 +136,8 @@ spaceship_gitstatus() {
   [[ $SPACESHIP_GIT_SHOW == false ]] && return
 
   spaceship::is_git || return
+
+  (( $+functions[gitstatus_query] )) || return
 
   if gitstatus_query SPACESHIP && [[ "$VCS_STATUS_RESULT" == ok-sync ]]; then
     local git_branch="$(spaceship_gitstatus_branch)" git_status="$(spaceship_gitstatus_status)"
