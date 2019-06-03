@@ -22,7 +22,7 @@ SPACESHIP_PYENV_COLOR="${SPACESHIP_PYENV_COLOR="yellow"}"
 spaceship_async_job_load_pyenv_async() {
   [[ $SPACESHIP_PYENV_SHOW == false ]] && return
 
-  spaceship::exists pyenv &>/dev/null || return # Do nothing if pyenv is not installed
+  (( $+commands[pyenv] )) || return # Do nothing if pyenv is not installed
 
   # Show pyenv python version only for Python-specific folders
   local project_root=$(spaceship::upsearch ".python-version")
