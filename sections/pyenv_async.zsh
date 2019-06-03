@@ -25,7 +25,8 @@ spaceship_async_job_load_pyenv_async() {
   spaceship::exists pyenv &>/dev/null || return # Do nothing if pyenv is not installed
 
   # Show pyenv python version only for Python-specific folders
-  spaceship::exists_file ".python-version" || return
+  local project_root=$(spaceship::upsearch ".python-version")
+  [[ -n $project_root ]] || return
 
   async_job spaceship spaceship_async_job_pyenv_async
 }

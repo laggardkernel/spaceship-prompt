@@ -81,14 +81,17 @@ spaceship::union() {
   echo $sections
 }
 
-spaceship::exists_file() {
-  local root="$(pwd -P)"
-  local up_level=0
+spaceship::upsearch() {
+  local root="$PWD"
 
-  while [ "$up_level" -ne 3 ] && [ "$root" ] && [ ! -f "$root/$1" ]; do
+  while [[ -n "$root" ]] && [[ ! -f "$root/$1" ]]; do
     root="${root%/*}"
-    (( up_level++ ))
   done
 
-  [[ -n "$root" ]] && [ "$up_level" -ne 3 ] &>/dev/null
+  if [[ -n "$root" ]]; then
+    echo "$root"
+    return 0
+  else
+    return 1
+  fi
 }
