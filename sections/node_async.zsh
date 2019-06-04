@@ -25,7 +25,8 @@ spaceship_async_job_load_node_async() {
   (( $+commands[nodenv] )) || (( $+commands[nvm] )) || (( $+commands[node] )) || return
 
   # Show NODE status only for JS-specific folders
-  spaceship::upsearch "package.json" >/dev/null \
+  spaceship::upsearch ".node-version" >/dev/null \
+    || spaceship::upsearch "package.json" >/dev/null \
     || spaceship::upsearch "node_modules" "dir" >/dev/null \
     || [[ -n *.js(#qN^/) ]] || return
 

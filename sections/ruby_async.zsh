@@ -26,7 +26,8 @@ spaceship_async_job_load_ruby_async() {
     || return
 
   # Show versions only for Ruby-specific folders
-  spaceship::upsearch "Gemfile" >/dev/null \
+  spaceship::upsearch ".ruby-version" >/dev/null \
+    || spaceship::upsearch "Gemfile" >/dev/null \
     || spaceship::upsearch "Rakefile" >/dev/null \
     || [[ -n *.rb(#qN^/) ]] || return
 
