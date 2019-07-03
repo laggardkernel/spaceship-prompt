@@ -40,25 +40,25 @@ spaceship_precmd_hook() {
   # Stop measuring exec_time, must be the first precmd action
   spaceship_exec_time_precmd_hook
 
-  # Register async worker
-  if [[ -z "$SPACESHIP_ASYNC_INITIALIZED" ]]; then
-    async_start_worker spaceship -u -n
+  # Restarts just the worker - in order to update worker with current shell values
+  if [[ -n "$SPACESHIP_ASYNC_INITIALIZED" ]]; then
+    # restart worker, all unfetched and incomplete work will be lost
+    async_stop_worker spaceship
+    async_start_worker spaceship -n
+    async_register_callback spaceship spaceship_async_callback
+
+    # Cleanup results from previous prompt, or they will flash for short amount of time
+    unset SPACESHIP_ASYNC_RESULTS
+  else
+    async_start_worker spaceship -n
     async_register_callback spaceship spaceship_async_callback
     typeset -g SPACESHIP_ASYNC_INITIALIZED=1
   fi
 
-  # Abort all unfinished async jobs from the previous prompt
-  async_flush_jobs spaceship
-
-  # Cleanup results from previous prompt, or they will flash for short amount of time
-  unset SPACESHIP_ASYNC_RESULTS
   declare -gA SPACESHIP_ASYNC_RESULTS
 
   # Should it add a new line before the prompt?
   [[ $SPACESHIP_PROMPT_ADD_NEWLINE == true ]] && echo -n "$NEWLINE"
-
-	# Switch async worker to the current directory
-  async_worker_eval spaceship "cd '$PWD'"
 
   # Draw initial prompt (no async jobs started yet)
   PROMPT=$(spaceship::compose_prompt $SPACESHIP_PROMPT_ORDER)
