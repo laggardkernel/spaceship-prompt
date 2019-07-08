@@ -39,7 +39,7 @@ spaceship::precmd() {
   spaceship_exec_time_precmd_hook
 
   # Restarts the async worker, in order to get an update-to-date shell environment
-  if [[ "${__SS_DATA[async]}" == "true" ]]; then
+  if [[ "${__ss_data[async]}" == "true" ]]; then
     async_stop_worker "spaceship_async_worker"
     async_start_worker "spaceship_async_worker" #-n
     # setopt before call register to avoid callback by async_worker_eval
@@ -47,12 +47,12 @@ spaceship::precmd() {
     async_register_callback "spaceship_async_worker" "spaceship::async_callback"
   fi
 
-  spaceship::compose_prompt
+  spaceship::build_section_cache
 }
 
 spaceship::preexec() {
   # Stop running prompt async jobs
-  if [[ "${__SS_DATA[async]}" == "true" ]]; then
+  if [[ "${__ss_data[async]}" == "true" ]]; then
     async_flush_jobs "spaceship_async_worker"
   fi
 
@@ -60,7 +60,7 @@ spaceship::preexec() {
 }
 
 spaceship::chpwd() {
-  if [[ "${__SS_DATA[async]}" == "true" ]]; then
+  if [[ "${__ss_data[async]}" == "true" ]]; then
     async_worker_eval "spaceship_async_worker" 'cd' "$PWD"
   fi
 

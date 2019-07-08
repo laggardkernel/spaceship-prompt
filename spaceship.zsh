@@ -9,7 +9,7 @@
 # Useful for issue reporting
 export SPACESHIP_VERSION="3.11.1"
 
-typeset -gAH __SS_DATA
+typeset -gAH __ss_data
 
 # Determination of Spaceship working directory
 # https://git.io/vdBH7
@@ -132,10 +132,10 @@ spaceship::load_sections() {
 
   for alignment in "${alignments[@]}"; do
     # Reset related cache
-    __SS_DATA[${alignment}_raw_sections]=""
-    __SS_DATA[${alignment}_sections]=""
-    __SS_DATA[async_${alignment}_sections]=""
-    __SS_DATA[custom_${alignment}_sections]=""
+    __ss_data[${alignment}_raw_sections]=""
+    __ss_data[${alignment}_sections]=""
+    __ss_data[async_${alignment}_sections]=""
+    __ss_data[custom_${alignment}_sections]=""
 
     sections_var="SPACESHIP_${(U)alignment}_ORDER"
     raw_sections=(${(P)sections_var})
@@ -147,7 +147,7 @@ spaceship::load_sections() {
 
       # Cache sections
       for tag in ${section_meta[2,-1]}; do
-        __SS_DATA[${tag}_${alignment}_sections]+="${section} "
+        __ss_data[${tag}_${alignment}_sections]+="${section} "
 
         # Special Case: Remember that async lib should be loaded
         [[ "$tag" == "async" ]] && load_async=true
@@ -170,7 +170,7 @@ spaceship::load_sections() {
         SPACESHIP_PROMPT_ORDER=("${(@)SPACESHIP_PROMPT_ORDER:#${raw_section}}")
         SPACESHIP_RPROMPT_ORDER=("${(@)SPACESHIP_RPROMPT_ORDER:#${raw_section}}")
         for tag in ${section_meta[2,-1]}; do
-          __SS_DATA[${tag}_${alignment}_sections]="${__SS_DATA[${tag}_${alignment}_sections]%${section} } "
+          __ss_data[${tag}_${alignment}_sections]="${__ss_data[${tag}_${alignment}_sections]%${section} } "
         done
       fi
     done
@@ -179,14 +179,14 @@ spaceship::load_sections() {
     # store as single string, separated by whitespace.
     # Cache the raw_sections after invalid ones are removed
     raw_sections=(${(P)sections_var})
-    __SS_DATA[${alignment}_raw_sections]="${raw_sections[*]}"
-    __SS_DATA[${alignment}_sections]="${raw_sections[@]%::*}"
+    __ss_data[${alignment}_raw_sections]="${raw_sections[*]}"
+    __ss_data[${alignment}_sections]="${raw_sections[@]%::*}"
   done
 
   # Load Async libs at last, because before initializing
   # ZSH-Async, all functions must be defined.
   if ${load_async}; then
-    __SS_DATA[async]=true
+    __ss_data[async]=true
     # TODO: ZSH-ASYNC Path configurable!
     # Avoid duplicate sourcing and loading of zsh-async by checking flag ASYNC_INIT_DONE
     (( ASYNC_INIT_DONE )) || source "${SPACESHIP_ROOT}/modules/zsh-async/async.zsh"

@@ -88,16 +88,21 @@ spaceship::union() {
 # @args
 #   $1 string The tag to test
 #   $2 string The section name
+#   $3 string Alignment info
 #
 # @returns
 #   0 if the section contains the tag
 spaceship::section_is_tagged_as() {
   local tag="${1}"
   local section="${2}"
-  local -a sections=(
-    ${=__SS_DATA[${tag}_prompt_sections]:-}
-    ${=__SS_DATA[${tag}_rprompt_sections]:-}
-  )
+  local -a sections
+  local -a alignments=("prompt" "rprompt")
+
+  [[ -n "$3" ]] && alignments=("$3")
+
+  for alignment in "${(@)alignments}"; do
+    sections=(${(@)sections} ${=__ss_data[${tag}_${alignment}_sections]:-})
+  done
   (( ${sections[(Ie)${section}]} ))
 }
 
@@ -115,9 +120,42 @@ spaceship::section_in_use() {
   [[ -n "$2" ]] && alignments=("$2")
 
   for alignment in "${(@)alignments}"; do
-    sections=(${(@)sections} ${=__SS_DATA[${alignment}_sections]:-})
+    sections=(${(@)sections} ${=__ss_data[${alignment}_sections]:-})
   done
   (( ${sections[(Ie)${section}]} ))
+}
+
+# Refresh a single item in the cache
+#
+# @args
+#   $1 string The item to search for (needle)
+#   $2 array The array to search in (haystack)
+function spaceship::find_in_array() {
+  local needle="${1}"
+  local -a haystack=(${=@[2,-1]})
+
+  local -a occurrences
+  local haystack_size=${#haystack}
+  local searchFrom=1
+
+  while true; do
+    # Array Expansion:
+    #   i: First index of $needle
+    #   e: Use string comparison, instead of pattern matching
+    #   n: Give us the nth match. This is done, because we only
+    #      can search for the first, or the last index.
+    var="haystack[(n:${searchFrom}:ie)${needle}]"
+    lastIndex=${(P)var}
+
+    if (( ${lastIndex} > ${haystack_size} )); then
+      # Exit condition: The last index is larger than the entire array
+      break
+    fi
+    occurrences+=${lastIndex}
+    searchFrom=$((searchFrom + 1))
+  done
+
+  echo "${(j: :)occurrences}"
 }
 
 # Search recursively in parent folders for given file.
